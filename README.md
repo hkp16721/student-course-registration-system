@@ -1,135 +1,278 @@
-# Student Course Registration System - Requirement Specification Document
+# Student Course Registration System
 
-## 1. Problem Statement
-A web-based student course registration system where students can browse available courses, register for classes, manage their academic schedule, and track their enrollment status. The system should also allow administrators to manage courses, student records, and registration processes.
+A Java-based console application for managing student course registrations. This system allows students to register for courses, view available courses, manage their schedules, and handle course enrollment.
 
-## 2. Functional Requirements
+## Features
 
-### 2.1 Student Management
-- **Student Registration**: New students can create accounts with personal information
-- **Student Authentication**: Students can login/logout securely
-- **Profile Management**: Students can view and update their personal information
-- **Academic History**: Students can view their enrolled courses and grades
+### Implemented Features
 
-### 2.2 Course Management
-- **Course Catalog**: Display available courses with details (name, description, credits, schedule)
-- **Course Search**: Students can search courses by name, department, or instructor
-- **Course Filtering**: Filter courses by semester, time slots, or availability
-- **Prerequisites Check**: System validates if student meets course prerequisites
+- **Student Management**: Create student accounts with secure password hashing
+- **Course Management**: Create and manage course offerings
+- **Registration System**: Register students for courses with validation
+- **Schedule Management**: View student schedules and detect conflicts
+- **Course Search**: Search courses by name, code, instructor, or department
+- **Authentication**: Secure login system with password verification
+- **Data Validation**: Prevent duplicate registrations and enforce capacity limits
 
-### 2.3 Registration Process
-- **Course Registration**: Students can register for available courses
-- **Registration Validation**: Check for time conflicts, capacity limits, and prerequisites
-- **Waitlist Management**: Students can join waitlists for full courses
-- **Drop/Add Courses**: Students can drop or add courses within allowed timeframe
-- **Registration History**: Track all registration activities and changes
+### Core Functionality
 
-### 2.4 Schedule Management
-- **Personal Schedule**: Students can view their weekly class schedule
-- **Schedule Conflicts**: System detects and prevents time conflicts
-- **Calendar Integration**: Export schedule to external calendar applications
-- **Schedule Printing**: Generate printable schedule reports
+- Student registration and authentication
+- Course catalog browsing and searching
+- Course enrollment with capacity and conflict checking
+- Personal schedule viewing
+- Course dropping functionality
+- Profile management
 
-### 2.5 Administrative Functions
-- **Course Creation**: Administrators can create and modify course offerings
-- **Student Management**: Administrators can manage student accounts and records
-- **Registration Reports**: Generate enrollment and capacity reports
-- **System Configuration**: Manage registration periods and system settings
+## Technology Stack
 
-### 2.6 Notification System
-- **Registration Confirmations**: Email confirmations for successful registrations
-- **Waitlist Notifications**: Notify students when waitlisted courses become available
-- **Deadline Reminders**: Alert students about registration deadlines
-- **System Announcements**: Broadcast important messages to users
+- **Java 17**: Core programming language
+- **Maven**: Build and dependency management
+- **JUnit 5**: Unit testing framework
+- **BCrypt**: Password hashing and security
+- **DynamoDB SDK**: Database integration (with in-memory fallback)
 
-## 3. Non-Functional Requirements
+## Project Structure
 
-### 3.1 Performance Requirements
-- **Response Time**: System should respond within 3 seconds for all user interactions
-- **Concurrent Users**: Support at least 500 concurrent users during peak registration
-- **Database Performance**: Course searches should complete within 2 seconds
-- **Scalability**: System should handle 10,000+ student records efficiently
+```
+src/
+├── main/java/com/studentcourseregistration/app/
+│   ├── App.java                          # Main application entry point
+│   ├── model/                            # Data models
+│   │   ├── Student.java                  # Student entity
+│   │   ├── Course.java                   # Course entity
+│   │   └── Registration.java             # Registration entity
+│   ├── service/                          # Business logic
+│   │   ├── SimpleStudentService.java     # Student operations
+│   │   ├── SimpleCourseService.java      # Course operations
+│   │   ├── SimpleRegistrationService.java # Registration operations
+│   │   ├── StudentService.java           # DynamoDB student service
+│   │   ├── CourseService.java            # DynamoDB course service
+│   │   └── RegistrationService.java      # DynamoDB registration service
+│   ├── repository/                       # Data access layer
+│   │   ├── InMemoryStudentRepository.java
+│   │   ├── InMemoryCourseRepository.java
+│   │   └── InMemoryRegistrationRepository.java
+│   └── config/
+│       └── DynamoDbConfig.java           # Database configuration
+└── test/java/com/studentcourseregistration/app/
+    └── AppTest.java                      # Unit tests
+```
 
-### 3.2 Security Requirements
-- **Authentication**: Secure login with password encryption
-- **Authorization**: Role-based access control (Student, Administrator)
-- **Data Protection**: Encrypt sensitive student information
-- **Session Management**: Automatic logout after 30 minutes of inactivity
-- **Audit Trail**: Log all registration activities for security monitoring
+## Building and Running
 
-### 3.3 Reliability Requirements
-- **System Availability**: 99.5% uptime during business hours
-- **Data Backup**: Daily automated backups of all system data
-- **Error Handling**: Graceful error handling with user-friendly messages
-- **Recovery**: System recovery within 4 hours of any failure
+### Prerequisites
 
-### 3.4 Usability Requirements
-- **User Interface**: Intuitive and responsive web interface
-- **Accessibility**: Comply with WCAG 2.1 accessibility standards
-- **Mobile Support**: Responsive design for mobile and tablet devices
-- **Help System**: Online help documentation and user guides
-- **Multi-language**: Support for English and Spanish interfaces
+- Java 17 or higher
+- Maven 3.6 or higher
 
-### 3.5 Compatibility Requirements
-- **Browser Support**: Compatible with Chrome, Firefox, Safari, and Edge
-- **Operating System**: Platform-independent web application
-- **Database**: Compatible with MySQL or PostgreSQL databases
-- **Integration**: API support for integration with existing student information systems
+### Build the Project
 
-### 3.6 Maintainability Requirements
-- **Code Quality**: Well-documented and modular code structure
-- **Testing**: Comprehensive unit and integration test coverage
-- **Deployment**: Automated deployment and rollback capabilities
-- **Monitoring**: System health monitoring and alerting
+```bash
+# Navigate to project directory
+cd student-course-registration-app
 
-## 4. Technical Specifications
+# Clean and compile
+mvn clean compile
 
-### 4.1 Technology Stack
-- **Backend**: Java 17 with Spring Boot framework
-- **Frontend**: HTML5, CSS3, JavaScript (React or Thymeleaf)
-- **Database**: MySQL or PostgreSQL
-- **Build Tool**: Maven
-- **Testing**: JUnit 5 for unit testing
-- **Security**: Spring Security for authentication and authorization
+# Run tests
+mvn test
 
-### 4.2 System Architecture
-- **Architecture Pattern**: Model-View-Controller (MVC)
-- **Database Design**: Relational database with normalized tables
-- **API Design**: RESTful web services
-- **Deployment**: Containerized deployment using Docker
+# Build JAR file
+mvn package
+```
 
-## 5. Data Requirements
+### Run the Application
 
-### 5.1 Student Data
-- Personal information (name, email, phone, address)
-- Academic information (student ID, major, year, GPA)
-- Authentication credentials (username, encrypted password)
+#### Option 1: Using Maven (may have input issues)
 
-### 5.2 Course Data
-- Course information (code, name, description, credits)
-- Schedule details (days, times, location, instructor)
-- Enrollment limits and prerequisites
+```bash
+mvn exec:java -Dexec.mainClass="com.studentcourseregistration.app.App"
+```
 
-### 5.3 Registration Data
-- Enrollment records (student-course relationships)
-- Registration timestamps and status
-- Waitlist information and priorities
+#### Option 2: Using Java directly (recommended)
 
+```bash
+# Build the JAR first
+mvn package
 
+# Run with dependencies on classpath
+java -cp "target/classes:target/dependency/*" com.studentcourseregistration.app.App
+```
 
-## 6. Deliverables
+#### Option 3: Create a fat JAR (easiest)
 
-1. **Requirements Specification Document** (this document)
-2. **System Design Document** with architecture and database design
-3. **Working Software Application** with all specified features
-4. **Test Documentation** including test plans and results
-5. **User Documentation** and training materials
-6. **Deployment Guide** and system administration manual
-7. **Source Code** with comprehensive documentation
+Add this plugin to your `pom.xml` and rebuild:
 
----
+```xml
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-shade-plugin</artifactId>
+    <version>3.4.1</version>
+    <executions>
+        <execution>
+            <phase>package</phase>
+            <goals>
+                <goal>shade</goal>
+            </goals>
+            <configuration>
+                <transformers>
+                    <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                        <mainClass>com.studentcourseregistration.app.App</mainClass>
+                    </transformer>
+                </transformers>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+```
 
-**Document Version**: 1.0  
-**Last Updated**: [Current Date]  
-**Prepared By**: Development Team  
-**Approved By**: [Stakeholder Name]
+Then run:
+
+```bash
+mvn package
+java -jar target/student-course-registration-app-1.0-SNAPSHOT.jar
+```
+
+## Usage
+
+### Sample Data
+
+The application initializes with sample data:
+
+- **Sample Student**: Username: `hemant`, Password: `password123`
+- **Sample Courses**: CS101, MATH201, ENG101
+
+### Application Menu
+
+1. **Login Menu**:
+
+   - Login with existing credentials
+   - Register new student account
+   - Exit application
+
+2. **Main Menu** (after login):
+   - View available courses
+   - Search courses
+   - Register for courses
+   - View enrolled courses
+   - Drop courses
+   - View profile
+   - Logout
+
+### Example Usage Flow
+
+1. Start the application
+2. Login with `hemant` / `password123` or register a new account
+3. View available courses to see what's offered
+4. Register for a course using its course code (e.g., "CS101")
+5. View your enrolled courses to confirm registration
+6. Search for courses by keyword
+7. Drop courses if needed
+
+## Testing
+
+The project includes comprehensive unit tests covering:
+
+- Student creation and authentication
+- Course management operations
+- Registration validation
+- Duplicate prevention
+- Search functionality
+
+Run tests with:
+
+```bash
+mvn test
+```
+
+## Database Configuration
+
+### In-Memory Mode (Default)
+
+The application uses in-memory repositories by default, which is perfect for development and testing. No external database setup required.
+
+### DynamoDB Mode
+
+The application now supports DynamoDB Local for persistent storage!
+
+#### Quick Setup with NoSQL Workbench
+
+1. **Start NoSQL Workbench** with DynamoDB Local on port 8000
+
+2. **Test Connection and Initialize Tables**:
+   ```bash
+   # Linux/Mac
+   ./test-db-connection.sh
+   
+   # Windows
+   test-db-connection.bat
+   ```
+
+3. **Verify Setup**: The script will:
+   - Test connection to DynamoDB Local
+   - Create required tables (Students, Courses, Registrations)
+   - Create necessary indexes for efficient queries
+   - Display current tables
+
+#### Manual Setup
+
+```bash
+# Build the project
+mvn clean package
+
+# Run the database connection test
+mvn exec:java -Dexec.mainClass="com.studentcourseregistration.app.util.DatabaseConnectionTest"
+```
+
+#### Configuration Details
+
+- **Endpoint**: `http://localhost:8000`
+- **Region**: `US_EAST_1`
+- **Credentials**: Dummy credentials (for local development)
+
+For detailed setup instructions, troubleshooting, and migration guide, see [DYNAMODB_SETUP.md](DYNAMODB_SETUP.md)
+
+## Architecture
+
+### Design Patterns
+
+- **Repository Pattern**: Separates data access logic
+- **Service Layer Pattern**: Encapsulates business logic
+- **Model-View-Controller**: Separates concerns
+
+### Key Components
+
+- **Models**: Define data structures (Student, Course, Registration)
+- **Repositories**: Handle data persistence (in-memory or DynamoDB)
+- **Services**: Implement business rules and validation
+- **App**: Provides console-based user interface
+
+## Security Features
+
+- Password hashing using BCrypt
+- Input validation and sanitization
+- Duplicate prevention (username/email)
+- Session management (login/logout)
+
+## Future Enhancements
+
+- Web-based user interface
+- Email notifications
+- Advanced scheduling algorithms
+- Waitlist management
+- Grade management
+- Reporting and analytics
+- REST API endpoints
+- Database migration tools
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Add tests for new functionality
+4. Ensure all tests pass
+5. Submit a pull request
+
+## License
+
+This project is for educational purposes.
